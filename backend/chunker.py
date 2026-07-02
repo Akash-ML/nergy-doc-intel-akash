@@ -52,7 +52,9 @@ def chunk_pages(pages: List[Dict], source_file: str) -> List[Dict]:
             chunk_tokens = tokens[start:end]
             chunk_text = _tokens_to_text(chunk_tokens).strip()
 
-            if chunk_text:
+            MIN_CHUNK_CHARS = 20  # skip chunks with negligible real content
+            
+            if chunk_text and len(chunk_text) >= MIN_CHUNK_CHARS:
                 chunk_id = f"{source_file}::p{page_number}::c{global_chunk_index}"
                 chunks.append({
                     "chunk_id": chunk_id,

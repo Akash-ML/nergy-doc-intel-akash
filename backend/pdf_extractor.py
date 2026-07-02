@@ -1,4 +1,5 @@
 import fitz  # PyMuPDF
+import re
 from typing import List, Dict
 
 
@@ -28,7 +29,11 @@ def extract_pages(file_path: str) -> List[Dict]:
     pages = []
     for page_num in range(doc.page_count):
         page = doc[page_num]
-        text = page.get_text().strip()
+        
+        # text = page.get_text().strip()
+        raw_text = page.get_text()
+        text = re.sub(r'\s+', ' ', raw_text).strip()
+
         pages.append({
             "page_number": page_num + 1,  # 1-indexed for human-readable citations
             "text": text
@@ -61,7 +66,11 @@ def extract_pages_from_bytes(file_bytes: bytes, filename: str = "uploaded.pdf") 
     pages = []
     for page_num in range(doc.page_count):
         page = doc[page_num]
-        text = page.get_text().strip()
+
+        # text = page.get_text().strip()
+        raw_text = page.get_text()
+        text = re.sub(r'\s+', ' ', raw_text).strip()
+
         pages.append({
             "page_number": page_num + 1,
             "text": text
