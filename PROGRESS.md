@@ -19,8 +19,8 @@
 - [x] Step 4: backend/embedder.py + backend/vector_store.py — concurrent embedding (ThreadPoolExecutor, MAX_WORKERS=8), Pinecone upsert
 - [x] Step 5: backend/retriever.py — query embedding + Pinecone search
 - [x] Step 6: backend/generator.py — Groq prompt + generation, grounded system prompt
-- [ ] Step 7: FastAPI endpoints (/upload, /ask)
-- [ ] Step 8: Edge case handling (empty PDF, irrelevant query threshold)
+- [x] Step 7: FastAPI endpoints (/upload, /ask)
+- [x] Step 8: Edge case handling (relevance threshold: 0.65 based on observed scores, file size limits, input validation)
 - [ ] Step 9: Frontend
 - [ ] Step 10: End-to-end testing
 - [ ] Step 11: README

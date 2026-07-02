@@ -8,8 +8,12 @@ from backend.chunker import chunk_pages
 from backend.embedder import embed_chunks
 from backend.vector_store import upsert_chunks
 from backend.retriever import retrieve
+from backend.retriever import retrieve_relevant
 from backend.generator import generate_answer
 from backend.schemas import UploadResponse, AskRequest, AskResponse, SourceChunk
+
+MAX_FILE_SIZE_MB = 20
+MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024
 
 app = FastAPI(title="NERGY Document Intelligence System")
 
@@ -33,6 +37,12 @@ async def upload_document(file: UploadFile = File(...)):
         raise HTTPException(status_code=400, detail="Only PDF files are supported.")
 
     file_bytes = await file.read()
+
+    if len(file_bytes) > MAX_FILE_SIZE_BYTES:
+        raise HTTPException(
+            status_code=413,
+            detail=f"File too large. Maximum size is {MAX_FILE_SIZE_MB}MB."
+        )
 
     if len(file_bytes) == 0:
         raise HTTPException(status_code=400, detail="Uploaded file is empty.")
@@ -83,14 +93,17 @@ async def ask_question(request: AskRequest):
     if not question:
         raise HTTPException(status_code=400, detail="Question cannot be empty.")
 
+    if len(question) > 1000:
+        raise HTTPException(status_code=400, detail="Question is too long (max 1000 characters).")
+
     try:
-        retrieved_chunks = retrieve(question)
+        retrieved_chunks = retrieve_relevant(question)
     except Exception as e:
         raise HTTPException(status_code=502, detail=f"Retrieval error: {e}")
 
     if not retrieved_chunks:
         return AskResponse(
-            answer="I don't have any documents to search yet. Please upload a PDF first.",
+            answer="I couldn't find relevant information in the uploaded documents to answer this question. Try rephrasing, or confirm the relevant document has been uploaded.",
             sources=[]
         )
 

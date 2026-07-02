@@ -45,3 +45,12 @@ def retrieve(query: str, top_k: int = None) -> List[Dict]:
         })
 
     return retrieved
+
+def retrieve_relevant(query: str, top_k: int = None) -> List[Dict]:
+    """
+    Same as retrieve(), but filters out chunks below the relevance threshold.
+    Used by /ask to avoid answering from weak/irrelevant matches.
+    """
+    results = retrieve(query, top_k=top_k)
+    
+    return [r for r in results if r["score"] >= settings.RELEVANCE_THRESHOLD]

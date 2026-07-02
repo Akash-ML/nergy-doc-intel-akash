@@ -17,6 +17,8 @@ class Settings:
     CHUNK_OVERLAP: int = 75
     TOP_K: int = 4
 
+    RELEVANCE_THRESHOLD: float = 0.65
+
     def validate(self):
         missing = []
         if not self.GROQ_API_KEY:
