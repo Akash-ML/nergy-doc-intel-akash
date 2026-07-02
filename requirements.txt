@@ -5,4 +5,4 @@ python-dotenv
 pymupdf
 groq
 google-generativeai
-pinecone-client
+pinecone
