@@ -257,3 +257,6 @@ nergy-doc-intel-akash/
 ├── PROGRESS.md              # Development log
 └── README.md
 ```
+
+## Output
+![Output](screenshots/output.png)
