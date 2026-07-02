@@ -12,6 +12,9 @@ from backend.retriever import retrieve_relevant
 from backend.generator import generate_answer
 from backend.schemas import UploadResponse, AskRequest, AskResponse, SourceChunk
 
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
+
 MAX_FILE_SIZE_MB = 20
 MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024
 
@@ -26,8 +29,8 @@ app.add_middleware(
 )
 
 
-@app.get("/")
-def root():
+@app.get("/health")
+def health():
     return {"status": "ok", "service": "NERGY Document Intelligence System"}
 
 
@@ -123,3 +126,9 @@ async def ask_question(request: AskRequest):
     ]
 
     return AskResponse(answer=answer, sources=sources)
+
+app.mount("/static", StaticFiles(directory="frontend"), name="static")
+
+@app.get("/")
+def serve_frontend():
+    return FileResponse("frontend/index.html")
