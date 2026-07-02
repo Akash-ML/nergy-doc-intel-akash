@@ -259,4 +259,4 @@ nergy-doc-intel-akash/
 ```
 
 ## Output
-![Output](screenshots/output.png)
+![Output](screenshot/output.png)
