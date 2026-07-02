@@ -236,22 +236,22 @@ This system is built for a small-scale demo (1–50 documents) and would need me
 
 nergy-doc-intel-akash/
 ├── backend/
-│   ├── main.py           # FastAPI app, routes, static file serving
-│   ├── config.py         # Environment config, tunable constants
-│   ├── schemas.py        # Pydantic request/response models
-│   ├── pdf_extractor.py  # PyMuPDF text extraction
-│   ├── chunker.py        # Fixed-size chunking with overlap
-│   ├── embedder.py       # Google embedding calls (concurrent)
-│   ├── vector_store.py   # Pinecone upsert/query/stats
-│   ├── retriever.py      # Query embedding + Pinecone search + relevance filtering
-│   └── generator.py      # Groq prompt construction + generation
+│   ├── main.py            # FastAPI app, routes, static file serving
+│   ├── config.py           # Environment config, tunable constants
+│   ├── schemas.py          # Pydantic request/response models
+│   ├── pdf_extractor.py    # PyMuPDF text extraction
+│   ├── chunker.py          # Fixed-size chunking with overlap
+│   ├── embedder.py         # Google embedding calls (concurrent)
+│   ├── vector_store.py     # Pinecone upsert/query/stats
+│   ├── retriever.py        # Query embedding + Pinecone search + relevance filtering
+│   └── generator.py        # Groq prompt construction + generation
 ├── frontend/
 │   ├── index.html
 │   ├── style.css
 │   └── app.js
-├── scripts/               # Standalone test/debug scripts used during development
+├── scripts/                # Standalone test/debug scripts used during development
 ├── requirements.txt
-├── .env                   # Not committed — see Setup Instructions
+├── .env                    # Not committed — see Setup Instructions
 ├── .gitignore
-├── PROGRESS.md             # Development log
+├── PROGRESS.md              # Development log
 └── README.md
