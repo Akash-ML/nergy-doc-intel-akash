@@ -30,43 +30,41 @@ Users upload one or more PDFs through a simple web UI. The system extracts text,
 ## Architecture
 
 ```
-[Browser: HTML/JS/CSS — served as static files from FastAPI]
-│
-│  POST /upload (PDF file)          POST /ask ({ question })
-▼                                          ▼
-┌─────────────────────────────────────────────────────────────┐
-│                      FastAPI Backend                         │
-│                                                                │
-│  /upload                              /ask                   │
-│    1. Validate file (type, size)        1. Validate question  │
-│    2. PyMuPDF → extract text/page       2. Embed query        │
-│    3. Chunk (500 tok, 75 overlap,          (Google, 768-dim,  │
-│       per-page, whitespace-normalized)     RETRIEVAL_QUERY)   │
-│    4. Embed chunks (Google                3. Pinecone search  │
-│       gemini-embedding-001, 768-dim,         top_k=4          │
-│       RETRIEVAL_DOCUMENT, concurrent      4. Filter by         │
-│       via ThreadPoolExecutor)                relevance         │
-│    5. Upsert to Pinecone                     threshold (0.65) │
-│       (id, vector, metadata)              5. If none pass:     │
-│                                               return graceful   │
-│                                               "not found" msg  │
-│                                            6. Build grounded    │
-│                                               prompt from       │
-│                                               retrieved chunks  │
-│                                            7. Groq (Llama 3.3   │
-│                                               70B) generates    │
-│                                               answer            │
-│                                            8. Return answer +   │
-│                                               source chunks     │
-│                                               (file, page,      │
-│                                               snippet, score)   │
-└─────────────────────────────────────────────────────────────┘
-│                                          │
-▼                                          ▼
-[Pinecone serverless]                  [Google AI Studio /
-vector store, dim 768,                  Groq APIs]
-cosine similarity
-```
+Browser: HTML/JS/CSS
+              (served as static files from FastAPI)
+                            │
+              ┌─────────────┴──────────────┐
+              │                             │
+     POST /upload (PDF file)      POST /ask ({ question })
+              │                             │
+              ▼                             ▼
+┌────────────────────────────────────────────────────────────────┐
+│                        FastAPI Backend                         │
+├───────────────────────────────┬────────────────────────────────┤
+│  /upload                      │  /ask                          │
+│                                │                                │
+│  1. Validate file              │  1. Validate question          │
+│     (type, size)               │                                │
+│  2. PyMuPDF → extract          │  2. Embed query (Google,       │
+│     text/page                  │     768-dim, RETRIEVAL_QUERY)  │
+│  3. Chunk (500 tok, 75         │  3. Pinecone search top_k=4    │
+│     overlap, per-page,         │  4. Filter by relevance        │
+│     whitespace-normalized)     │     threshold (0.65)           │
+│  4. Embed chunks (Google       │  5. If none pass: return       │
+│     gemini-embedding-001,      │     graceful "not found" msg   │
+│     768-dim, RETRIEVAL_        │  6. Build grounded prompt      │
+│     DOCUMENT, concurrent       │     from retrieved chunks      │
+│     via ThreadPoolExecutor)    │  7. Groq (Llama 3.3 70B)       │
+│  5. Upsert to Pinecone         │     generates answer           │
+│     (id, vector, metadata)     │  8. Return answer + source     │
+│                                │     chunks (file, page,        │
+│                                │     snippet, score)            │
+└───────────────────────────────┴────────────────────────────────┘
+              │                             │
+              ▼                             ▼
+   [Pinecone serverless]          [Google AI Studio / Groq APIs]
+   vector store, dim 768,
+   cosine similarity
 
 ---
 
