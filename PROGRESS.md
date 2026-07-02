@@ -22,7 +22,7 @@
 - [x] Step 7: FastAPI endpoints (/upload, /ask)
 - [x] Step 8: Edge case handling (relevance threshold: 0.65 based on observed scores, file size limits, input validation)
 - [x] Step 9: Frontend (served as static files from FastAPI, single-port setup)
-- [ ] Step 10: End-to-end testing
+- [x] Step 10: End-to-end testing (Edge cases re-verified in UI, Fresh-restart full flow) 
 - [ ] Step 11: README
 - [ ] Step 12 (stretch): GPU cross-encoder reranking
 
