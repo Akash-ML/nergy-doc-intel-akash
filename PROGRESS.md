@@ -23,8 +23,8 @@
 - [x] Step 8: Edge case handling (relevance threshold: 0.65 based on observed scores, file size limits, input validation)
 - [x] Step 9: Frontend (served as static files from FastAPI, single-port setup)
 - [x] Step 10: End-to-end testing (Edge cases re-verified in UI, Fresh-restart full flow) 
-- [ ] Step 11: README
-- [ ] Step 12 (stretch): GPU cross-encoder reranking
+- [x] Step 11: README
+- [ ] Step 12 (future implementation): GPU cross-encoder reranking
 
 ## Known issues / notes
 - Some whitespace-heavy chunks still slip past MIN_CHUNK_CHARS=20 filter — non-blocking, low priority. Could raise threshold to 40-50 if time allows.
